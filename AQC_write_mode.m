@@ -4,7 +4,7 @@ function [ message ] = AQC_write_mode( mode )
     AQC = AQC_open_serial( [] );
 
     fprintf( AQC, [ 'M' num2str( mode ) ] );
-    pause( 0.1 );
+    pause( 0.1 );   % Wait to allow time for response
 
     message = [];
     while AQC.BytesAvailable > 0
