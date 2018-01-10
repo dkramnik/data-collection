@@ -1,8 +1,14 @@
-function [ message ] = AQC_write_mode( mode )
+function [ message ] = AQC_write_mode( AQC, mode )
 % Set the AQC relays (0 = AQC, 1 = IV test)
+% Can pass an 'AQC' serial instrument for faster execution
+% Otherwise, one will be created, used, and then closed
     
-    AQC = AQC_open_serial( [] );
-
+    empty_flag = isempty( AQC );
+    
+    if( empty_flag )
+        AQC = AQC_open_serial( [] );
+    end
+    
     fprintf( AQC, [ 'M' num2str( mode ) ] );
     pause( 0.1 );   % Wait to allow time for response
 
@@ -11,6 +17,7 @@ function [ message ] = AQC_write_mode( mode )
         message = [ message fgets( AQC ) ];
     end
     
-    fclose( AQC );
-
+    if( empty_flag )
+        fclose( AQC );
+    end
 end

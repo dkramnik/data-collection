@@ -3,6 +3,10 @@ close all
 clear
 clc
 
+% Passing this into the AQC functions will cause them to make their own AQC
+% serial instrument each time
+AQC = [];
+
 %% Write to AQC DACs
 % Define the fixed parameters in the circuit, these are measured once the
 % circuit is constructed for obtaining the most-precise results
@@ -43,19 +47,19 @@ SLEW_MAX = '3300';
 DELAY_UP = '4000';
 DELAY_DOWN = '4000';
 
-AQC_write( 2, 0, VCOMP )
+AQC_write_dac( AQC, 2, 0, VCOMP )
 
-AQC_write( 1, 0, CASCODE_IBIAS )
-AQC_write( 1, 1, DIAMOND_IBIAS )
-AQC_write( 1, 2, ONE_SHOT )
-AQC_write( 1, 3, SLEW_UP )
-AQC_write( 1, 4, SLEW_DOWN )
-AQC_write( 1, 5, SLEW_MAX )
-AQC_write( 1, 6, DELAY_UP )
-AQC_write( 1, 7, DELAY_DOWN )
+AQC_write_dac( AQC, 1, 0, CASCODE_IBIAS )
+AQC_write_dac( AQC, 1, 1, DIAMOND_IBIAS )
+AQC_write_dac( AQC, 1, 2, ONE_SHOT )
+AQC_write_dac( AQC, 1, 3, SLEW_UP )
+AQC_write_dac( AQC, 1, 4, SLEW_DOWN )
+AQC_write_dac( AQC, 1, 5, SLEW_MAX )
+AQC_write_dac( AQC, 1, 6, DELAY_UP )
+AQC_write_dac( AQC, 1, 7, DELAY_DOWN )
 
 %% Set the relay mode
 
 % Mode 0 = AQC
 % Mode 1 = IV TEST
-AQC_mode( 0 )
+AQC_write_mode( AQC, 0 )
