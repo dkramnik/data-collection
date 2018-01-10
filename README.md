@@ -7,7 +7,7 @@ Written for collecting data for SPAD cryogenic temperature characterization.
 
 Instruments:
 
-AQC = Linear Active Quenching Circuit Rev. 2 (see Eagle-Public github repo. for design files)
+AQC = Linear Active Quenching Circuit Rev. 2 (see Eagle-Public github repo. for design files)\n
 COUNTER = Keysight 53220A Univ. Counter
 SMU = Keysight B2902A Source Measure Unit
 TEMP (old) = Lakeshore 331 Temp. Controller
