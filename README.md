@@ -13,8 +13,6 @@ COUNTER = Keysight 53220A Univ. Counter
 
 SMU = Keysight B2902A Source Measure Unit
 
-TEMP (old) = Lakeshore 331 Temp. Controller
-
-TEMP (new) = Lakeshore 336 Temp. Controller
+TEMP = Lakeshore 331 or 336 Temp. Controller
 
 Each function opens and closes the GPIB or serial instrument. This adds overhead, but means that data collection scripts don't need to pass around instrument objects.
