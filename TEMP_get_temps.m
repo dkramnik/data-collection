@@ -1,4 +1,4 @@
-function [ temps ] = TEMP_get_temps( addr, verbose )
+function [ inst_id, temps ] = TEMP_get_temps( addr, verbose )
 % Gets a Kelvin temp. reading of channels A, B, C, and D of a Lakeshore
 % controller. If the controller has fewer channels, then then invalid
 % channels will cycle through A and B.
@@ -16,6 +16,11 @@ function [ temps ] = TEMP_get_temps( addr, verbose )
     fopen( TEMP );
     
     temps = zeros( 4, 1 );
+    
+    % Fetch and store the instrument ID. Useful for picking the appropriate
+    % temp. channels during data processing
+    fprintf( TEMP, '*IDN?' );
+    inst_id = fgetl( TEMP );
     
     % Fetch the readings from the temp. controller
     fprintf( TEMP, 'KRDG? A' );
