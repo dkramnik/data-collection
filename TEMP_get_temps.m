@@ -1,9 +1,10 @@
 function [ inst_id, temps ] = TEMP_get_temps( addr, verbose )
 % Gets a Kelvin temp. reading of channels A, B, C, and D of a Lakeshore
 % controller. If the controller has fewer channels, then then invalid
-% channels will cycle through A and B.
+% channel requests will return values from the available channels. Toss in
+% data post-processing.
 
-    if( isempty( addr ) )   % Default address = 12
+    if( isempty( addr ) )   % Default address = 12 for 331 in flow cryostat
         addr = 12;
     end
     
@@ -17,7 +18,7 @@ function [ inst_id, temps ] = TEMP_get_temps( addr, verbose )
     
     temps = zeros( 4, 1 );
     
-    % Fetch and store the instrument ID. Useful for picking the appropriate
+    % Fetch and store instrument ID. Useful for picking the appropriate
     % temp. channels during data processing
     fprintf( TEMP, '*IDN?' );
     inst_id = fgetl( TEMP );

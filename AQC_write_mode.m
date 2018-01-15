@@ -9,6 +9,14 @@ function [ message ] = AQC_write_mode( AQC, mode )
         AQC = AQC_open_serial( [] );
     end
     
+    % Allows strings to be passed in for improved code readability
+    if( strcmp( mode, 'AQC' ) )
+        mode = 0;
+    end
+    if( strcmp( mode, 'IV_TEST' ) )
+        mode = 1;
+    end
+    
     fprintf( AQC, [ 'M' num2str( mode ) ] );
     pause( 0.1 );   % Wait to allow time for response
 
