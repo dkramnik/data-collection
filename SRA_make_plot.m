@@ -17,7 +17,7 @@ function [ TCR, DCR, p_ap_intercept, p_ap_geometric ] = SRA_make_plot( raw_data,
         plot( x, y );
     end
     
-    mdl = fitlm( x( x > 0.5 ), y( x > 0.5 ) );
+    mdl = fitlm( x( x > 1.0 & x < 6.0 ), y( x > 1.0 & x < 6.0 ) );
     slope = mdl.Coefficients{ 'x1', 'Estimate' };
     y_intercept = mdl.Coefficients{ '(Intercept)', 'Estimate' };
     x_intercept = ( abs( y_intercept ) + holdoff_time ) / slope;

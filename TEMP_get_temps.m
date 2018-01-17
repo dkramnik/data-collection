@@ -1,4 +1,4 @@
-function [ inst_id, temps ] = TEMP_get_temps( addr, verbose )
+function [ temp_inst_id, temps ] = TEMP_get_temps( addr, verbose )
 % Gets a Kelvin temp. reading of channels A, B, C, and D of a Lakeshore
 % controller. If the controller has fewer channels, then then invalid
 % channel requests will return values from the available channels. Toss in
@@ -12,6 +12,12 @@ function [ inst_id, temps ] = TEMP_get_temps( addr, verbose )
         verbose = true;
     end
     
+    % Check to see if a VISA instrument with the selected address exists
+    if ~VISA_check_addr_exists( addr )
+        fprintf( 'Error: no VISA instrument with address %d exists.\n', addr );
+        return
+    end
+    
     % Create instrument object and open communication
     TEMP = visa( 'ni', [ 'GPIB0::' num2str( addr ) '::INSTR' ] );
     fopen( TEMP );
@@ -21,7 +27,7 @@ function [ inst_id, temps ] = TEMP_get_temps( addr, verbose )
     % Fetch and store instrument ID. Useful for picking the appropriate
     % temp. channels during data processing
     fprintf( TEMP, '*IDN?' );
-    inst_id = fgetl( TEMP );
+    temp_inst_id = fgetl( TEMP );
     
     % Fetch the readings from the temp. controller
     fprintf( TEMP, 'KRDG? A' );
