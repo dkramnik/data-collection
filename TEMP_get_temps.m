@@ -15,6 +15,8 @@ function [ temp_inst_id, temps ] = TEMP_get_temps( addr, verbose )
     % Check to see if a VISA instrument with the selected address exists
     if ~VISA_check_addr_exists( addr )
         fprintf( 'Error: no VISA instrument with address %d exists.\n', addr );
+        temp_inst_id = [];
+        temps = []; % Return empty variables, use 'isempty' to check
         return
     end
     

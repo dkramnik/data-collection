@@ -8,7 +8,11 @@ close all
 clear
 clc
 
-TEMP = 129.1;   % Recording manually, for now
+[ temp_inst_id, temps ] = TEMP_get_temps( [], true );   % addr = default, verbose = true
+if isempty( temps )
+    temp_inst_id = 'Manual Entry';
+    temps = input( 'Enter temperature manually: ' );
+end
 
 VA_list = linspace( 10.9, 11.3, 5 );
 comp_thres_list = [ 0.925, 0.925, 0.925, 0.925, 0.900 ];
