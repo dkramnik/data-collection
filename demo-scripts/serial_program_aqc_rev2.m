@@ -7,6 +7,7 @@ clc
 % serial instrument each time
 AQC = [];
 
+% Mode 1 = IV TEST
 AQC_write_mode( AQC, 1 )
 
 %% Write to AQC DACs
@@ -24,8 +25,8 @@ VREF_DAC2 = 3.3;
 % 9.63 is the min. (need to verify)
 % 12.35V, 0.90V works well at room temp.
 % Define the desired parameters in the circuit
-V_A = 11.3;
-VREF_COMP = 0.9;
+V_A = 10.7;
+VREF_COMP = 0.945;
 
 % Calculate the required DAC values to set the desired parameters
 CASCODE_IBIAS = round( 1000 * ( V_CCS_RAIL - (R_CCS/R_L)*( V_A_RAIL - V_A - (R_L/R_E)*( V_CCS_RAIL - V_BE ) ) ) );

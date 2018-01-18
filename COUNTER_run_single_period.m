@@ -31,6 +31,8 @@ function [ interarrival_times ] = COUNTER_run_single_period( num_samples, addr, 
     % Get some measurements
     fprintf( COUNTER, [ 'SAMP:COUN ' num2str( num_samples ) ] );
     
+    pause( 1 );
+    
     % Fetch the results from the counter
     fprintf( COUNTER, 'READ?' );
     

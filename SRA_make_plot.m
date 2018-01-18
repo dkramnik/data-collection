@@ -15,6 +15,7 @@ function [ TCR, DCR, p_ap_intercept, p_ap_geometric ] = SRA_make_plot( raw_data,
     if draw_figure
         figure( );
         plot( x, y );
+        grid on;
     end
     
     mdl = fitlm( x( x > 1.0 & x < 6.0 ), y( x > 1.0 & x < 6.0 ) );

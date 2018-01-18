@@ -16,7 +16,8 @@ end
 
 VA_list = linspace( 10.9, 11.3, 5 );
 comp_thres_list = [ 0.925, 0.925, 0.925, 0.925, 0.900 ];
-holdoff_list = logspace( log10( 1300 ), log10( 1600 ), 5 );
+holdoff_list = 1300 + (1600 - 1300 ) * log( linspace( exp( 0 ), exp( 1 ), 5) );
+%holdoff_list = logspace( log10( 1300 ), log10( 1600 ), 5 );
 num_points = 10000;
 
 % DAC val. '1572' = 10us holdoff
