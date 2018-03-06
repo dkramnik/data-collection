@@ -16,7 +16,7 @@ function [ interarrival_times ] = COUNTER_run_single_period( num_samples, addr, 
     
     % Create instrument object and open communication
     COUNTER = visa( 'ni', [ 'GPIB0::' num2str( addr ) '::INSTR' ] );
-    set( COUNTER, 'Timeout', 100 ); % Long timeout for slow measurements
+    set( COUNTER, 'Timeout', 30 ); % Long timeout for slow measurements
     fopen( COUNTER );
     
     % Configure instrument for single period measurement

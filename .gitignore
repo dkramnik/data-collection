@@ -1,3 +1,7 @@
 # MATLAB temporary files #
-###################
 *.m~
+
+# MATLAB saved data files #
+*.mat
+*.fig
+*.png

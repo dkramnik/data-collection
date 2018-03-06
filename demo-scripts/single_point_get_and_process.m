@@ -8,7 +8,7 @@ clear
 clc
 
 % Edit these parameters
-save_data = false;
+save_data = true;
 num_points = 10000;
 
 % Get temps
@@ -21,13 +21,14 @@ end
 raw_data = COUNTER_run_single_period( num_points, [], [] );
 
 if save_data
-    save( [ 'AQC-single-point-data_' datestr( now, 'mm-dd-yyyy_HH-MM-SS' ) ] );
+    save( [ 'LL3-t2-AQC-single-point-data_' datestr( now, 'mm-dd-yyyy_HH-MM-SS' ) ] );
 end
 
-[ TCR, DCR, p_ap_intercept, p_ap_geometric ] = SRA_make_plot( raw_data, true );
+%% Use SRA to extract device performance
+[ TCR, DCR, p_ap_intercept, p_ap_geometric ] = SRA_make_plot( raw_data, true, [] );
+disp( [ 'Holdoff time = ' num2str( min( 1e6 * raw_data ), '%.2f' ) 'us' ] );
         
-% Try plotting a DCR curve from SRA on top of a histogram to get afterpulsing
-
+%% Plot a DCR curve from SRA on top of a histogram to get afterpulsing
 figure();
 hold on;
 grid on;

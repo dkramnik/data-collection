@@ -3,9 +3,10 @@ close all
 clear
 clc
 
-% Passing this into the AQC functions will cause them to make their own AQC
-% serial instrument each time
-AQC = [];
+delete( instrfind )
+
+% Create an AQC object to pass to each write function for faster execution
+AQC = AQC_open_serial( [] );
 
 % Mode 1 = IV TEST
 AQC_write_mode( AQC, 1 )
@@ -25,8 +26,8 @@ VREF_DAC2 = 3.3;
 % 9.63 is the min. (need to verify)
 % 12.35V, 0.90V works well at room temp.
 % Define the desired parameters in the circuit
-V_A = 10.7;
-VREF_COMP = 0.945;
+V_A = 10.8;
+VREF_COMP = 0.95;
 
 % Calculate the required DAC values to set the desired parameters
 CASCODE_IBIAS = round( 1000 * ( V_CCS_RAIL - (R_CCS/R_L)*( V_A_RAIL - V_A - (R_L/R_E)*( V_CCS_RAIL - V_BE ) ) ) );
@@ -43,7 +44,7 @@ VCOMP = num2str( VCOMP, '%04d' );
 
 % Define the any reamining DAC values directly
 DIAMOND_IBIAS = '2000'; % 1mA/1000
-ONE_SHOT = '1600';  % Max ~ 2700
+ONE_SHOT = '1400';  % Max ~ 1630
 SLEW_UP = '4000';
 SLEW_DOWN = '4000';
 SLEW_MAX = '3300';
@@ -66,3 +67,6 @@ AQC_write_dac( AQC, 1, 7, DELAY_DOWN )
 % Mode 0 = AQC
 % Mode 1 = IV TEST
 AQC_write_mode( AQC, 0 )
+
+%% End serial communication
+fclose( AQC );
