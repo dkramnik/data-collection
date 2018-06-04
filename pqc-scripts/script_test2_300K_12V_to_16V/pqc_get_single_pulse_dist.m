@@ -19,9 +19,8 @@ COUNTER = COUNTER_open_gpib( [ ] ); % Use default address
 %% Sweep parameters and record data
 
 % Top-level sweep: sourcemeter bias voltage
-
-VA_list = 12.0 : 0.1 : 16.0;    % 300K
-
+%VA_list = linspace( 10, 14, 101 );
+VA_list = 12.0 : 0.1 : 16.0;
 channel = 1;
 compliance = 10e-3;  % 10mA
 
@@ -35,13 +34,11 @@ bins = 10;
 data_cells = cell( 1, length( VA_list ) );
 
 for i = 1 : length( VA_list )
-    t_start = toc;
     disp( [ 'Running bias point ' num2str( i ) ' of ' num2str( length( VA_list ) ) '.' ] );
     
     Vt_list_current = Vt_list; % Copy over so that we can modify it
+    temp_last = TEMP_get_temps( [ ], [ ] ); % default addr, verbose output
     SMU_set_voltage( SMU, channel, VA_list( i ), compliance );
-    
-    [ temp_inst_id, temps_last ] = TEMP_get_temps( [ ], [ ] ); % default addr, verbose output
     
     pulse_CDF_mean = zeros( 1, length( Vt_list ) );
     pulse_CDF_std = zeros( 1, length( Vt_list ) );
@@ -66,7 +63,7 @@ for i = 1 : length( VA_list )
     pulse_PDF_mean( pulse_PDF_mean < 0 ) = 0; % Delete counts picked up below output DC offset of opamp
     Vt_bin_centers = ( Vt_list_current( 1 : end - 1 ) + Vt_list_current( 2 : end ) ) / 2;
     
-    data_cells{ i }.temp_readings = temps_last;
+    data_cells{ i }.temp = temp_last;
     data_cells{ i }.VA = VA_list( i );
     % Save raw pulse CDF
     data_cells{ i }.Vt_list_current = Vt_list_current;
@@ -75,9 +72,6 @@ for i = 1 : length( VA_list )
     % Save calculated pulse PDF
     data_cells{ i }.Vt_bin_centers = Vt_bin_centers;
     data_cells{ i }.pulse_PDF_mean = pulse_PDF_mean;
-    % Save start and stop time of this iteration
-    data_cells{ i }.t_start = t_start;
-    data_cells{ i }.t_stop = toc;
 end
 
 SMU_set_output_off( SMU );
