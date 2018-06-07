@@ -16,11 +16,46 @@ tic;
 SMU = SMU_open_gpib( [ ] ); % Use default address
 COUNTER = COUNTER_open_gpib( [ ] ); % Use default address
 
+%% Manually record the PQC parameters here
+pqc.RQ = 68e3;
+pqc.RS = 25;
+pqc.Rf1 = 1e3;
+pqc.Rf2 = 100;
+pqc.gain = 10;          % 1k : 100
+pqc.c_comp = 100e-12;   % 100fF comp. cap.
+pqc.type = 'wirebonded';
+
 %% Sweep parameters and record data
 
 % Top-level sweep: sourcemeter bias voltage
 
-VA_list = 12.0 : 0.1 : 16.0;    % 300K
+VA_range = 3.0;
+VA_delta = 0.1;
+
+filename = 'pqc_wirebonded_cryo_1_300K.mat';
+VA_start = 12.0;    % 300K
+% 290K
+%VA_start = 11.8;    % 280K
+% 270K
+%VA_start = 11.7;    % 260K
+% 250K
+%VA_start = 11.6;    % 240K
+% 230K
+%VA_start = 11.5;    % 220K
+% 210K
+%VA_start = 11.3;    % 200K
+%VA_start = 11.2;    % 190K
+%VA_start = 11.1;    % 180K
+%VA_start = 10.9;    % 170K
+%VA_start = 10.8;    % 160K
+%VA_start = 10.7;    % 150K
+%VA_start = 10.6;    % 140K
+%VA_start = 10.6;    % 130K
+%VA_start = 10.6;    % 120K
+%VA_start = 10.6;    % 110K
+%VA_start = 10.6;    % 100K
+
+VA_list = VA_start : VA_delta : ( VA_start + VA_range );    % 300K
 
 channel = 1;
 compliance = 10e-3;  % 10mA
@@ -89,5 +124,7 @@ fclose( COUNTER );
 runtime = toc;
 disp( [ 'Runtime was ' num2str( runtime ) ' seconds.' ] );
 
+%% TODO: delete everything we DON'T want to save to the mat file (eg. 'i')
+
 %% Save workspace to mat file
-save( 'room_temp_test_10x_0pt1s.mat' );
+save( filename );

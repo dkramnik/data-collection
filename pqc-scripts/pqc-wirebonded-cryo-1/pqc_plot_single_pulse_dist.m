@@ -6,7 +6,8 @@ close all
 clear
 clc
 
-load( 'room_temp_test_10x_0pt1s.mat' );
+load( 'pqc_wirebonded_cryo_1_100K.mat' );
+temp_str = 'T=100K';
 
 % Figure parameters
 lw = 1.25;
@@ -27,7 +28,12 @@ CDF_peaks = zeros( 1, length( data_cells ) );
 for i = 1 : length( data_cells )
     CDF_peaks( i ) = max( data_cells{ i }.pulse_CDF_mean );
 end
-plot( VA_list, CDF_peaks / delta_T, 'o--', 'linewidth', lw );
+%plot( VA_list, CDF_peaks / delta_T, 'o--', 'linewidth', lw );
+CDF_peaks_log_modified = CDF_peaks;
+CDF_peaks_log_modified( CDF_peaks_log_modified == 0 ) = 1e-10;
+semilogy( VA_list, CDF_peaks_log_modified / delta_T, 'o--', 'linewidth', lw );
+ylim( [ 1 1e8 ] );
+
 grid on;
 
 xlabel( 'V_A [V]' );
@@ -43,10 +49,10 @@ for i = 1 : length( data_cells )
 end
 grid on;
 
-title( 'CDF, No Smoothing' );
+title( [ 'CDF, No Smoothing, ' temp_str ] );
 xlabel( 'V_{thres.} [mV]' );
 ylabel( 'Pulses in Bin' );
-legend( sprintfc( 'V_A = %.1fV', VA_list ) );
+%legend( sprintfc( 'V_A = %.1fV', VA_list ) );
 set( gca, 'fontsize', fs );
 
 %% Plot raw PDF vs. overbias
@@ -58,9 +64,10 @@ for i = 1 : length( data_cells )
 end
 grid on;
 
+title( [ 'CDF Finite Differences, No Smoothing, ' temp_str ] );
 xlabel( 'V_{thres.} [mV]' );
 ylabel( 'Pulses in Bin' );
-legend( sprintfc( 'V_A = %.1fV', VA_list ) );
+%legend( sprintfc( 'V_A = %.1fV', VA_list ) );
 set( gca, 'fontsize', fs );
 
 %% Plot y-normalized PDF vs. overbias
@@ -72,9 +79,10 @@ for i = 1 : length( data_cells )
 end
 grid on;
 
+title( [ 'CDF Finite Differences Normalized, No Smoothing, ' temp_str ] );
 xlabel( 'V_{thres.} [mV]' );
 ylabel( 'Normalized PDF' );
-legend( sprintfc( 'V_A = %.1fV', VA_list ) );
+%legend( sprintfc( 'V_A = %.1fV', VA_list ) );
 set( gca, 'fontsize', fs );
 
 %% Plot x-normalized and y-normalized PDF vs. overbias
