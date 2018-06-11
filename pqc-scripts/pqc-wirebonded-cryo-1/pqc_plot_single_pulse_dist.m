@@ -6,7 +6,7 @@ close all
 clear
 clc
 
-load( 'pqc_wirebonded_cryo_1_100K.mat' );
+load( 'pqc_wirebonded_cryo_1_150K.mat' );
 temp_str = 'T=100K';
 
 % Figure parameters
@@ -44,14 +44,18 @@ set( gca, 'fontsize', fs );
 figure( )
 
 for i = 1 : length( data_cells )
-    plot( 1e3 * data_cells{ i }.Vt_list_current, data_cells{ i }.pulse_CDF_mean );
+    plot3( data_cells{ i }.VA * ones( size( data_cells{ i }.Vt_list_current ) ), ...
+        1e3 * data_cells{ i }.Vt_list_current, ...
+        data_cells{ i }.pulse_CDF_mean / norm( data_cells{ i }.pulse_CDF_mean ) );
     hold on;
 end
 grid on;
+%set( gca, 'ZScale', 'log' );
 
 title( [ 'CDF, No Smoothing, ' temp_str ] );
 xlabel( 'V_{thres.} [mV]' );
-ylabel( 'Pulses in Bin' );
+xlabel( 'V_A [V]' );
+zlabel( 'Pulses in Bin' );
 %legend( sprintfc( 'V_A = %.1fV', VA_list ) );
 set( gca, 'fontsize', fs );
 
@@ -59,10 +63,11 @@ set( gca, 'fontsize', fs );
 figure( )
 
 for i = 1 : length( data_cells )
-    plot( 1e3 * data_cells{ i }.Vt_bin_centers, data_cells{ i }.pulse_PDF_mean );
+    plot3( data_cells{ i }.VA * ones( size( data_cells{ i }.Vt_bin_centers ) ), 1e3 * data_cells{ i }.Vt_bin_centers, data_cells{ i }.pulse_PDF_mean );
     hold on;
 end
 grid on;
+%set( gca, 'ZScale', 'log' );
 
 title( [ 'CDF Finite Differences, No Smoothing, ' temp_str ] );
 xlabel( 'V_{thres.} [mV]' );
@@ -74,7 +79,7 @@ set( gca, 'fontsize', fs );
 figure( )
 
 for i = 1 : length( data_cells )
-    plot( 1e3 * data_cells{ i }.Vt_bin_centers, data_cells{ i }.pulse_PDF_mean / norm( data_cells{ i }.pulse_PDF_mean ) );
+    plot3( data_cells{ i }.VA * ones( size( data_cells{ i }.Vt_bin_centers ) ), 1e3 * data_cells{ i }.Vt_bin_centers, data_cells{ i }.pulse_PDF_mean / norm( data_cells{ i }.pulse_PDF_mean ) );
     hold on;
 end
 grid on;
