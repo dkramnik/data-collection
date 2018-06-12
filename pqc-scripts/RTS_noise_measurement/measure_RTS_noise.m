@@ -33,5 +33,5 @@ while( true )
     raw_counts = [ raw_counts COUNTER_run_single_totalize( COUNTER, 'POS', Vt, delta_T, bins ) ];
     
     plot( raw_counts );
-    save( 'RTS_test_1_300K.mat' );
+    save( 'RTS_test_x_300K.mat' );
 end
