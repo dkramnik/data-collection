@@ -32,10 +32,13 @@ pqc.type = 'wirebonded';
 VA_range = 3.0;
 VA_delta = 0.1;
 
-filename = 'pqc_wirebonded_cryo_2_280K.mat';
+filename = 'pqc_wirebonded_cryo_2_fast_laser_20mA_140K.mat';
+if exist( filename, 'file' )
+    error( 'Filename already exists! Aborting run.' );
+end
 %VA_start = 12.0;    % 300K
 % 290K
-VA_start = 11.8;    % 280K
+%VA_start = 11.8;    % 280K
 % 270K
 %VA_start = 11.7;    % 260K
 % 250K
@@ -49,7 +52,7 @@ VA_start = 11.8;    % 280K
 %VA_start = 10.9;    % 170K
 %VA_start = 10.8;    % 160K
 %VA_start = 10.7;    % 150K
-%VA_start = 10.6;    % 140K
+VA_start = 10.6;    % 140K
 %VA_start = 10.6;    % 130K
 %VA_start = 10.6;    % 120K
 %VA_start = 10.6;    % 110K
@@ -64,7 +67,7 @@ compliance = 10e-3;  % 10mA
 % MUST be in 2.5mV steps (resolution of the DAC in the instrument)
 delta_thresh = 2.5e-3;
 Vt_list = 0 : delta_thresh : 25e-3;     % Make sure to sweep through the DC offset of the opamp
-delta_T = 0.1;
+delta_T = 0.01;
 bins = 10;
 
 data_cells = cell( 1, length( VA_list ) );
