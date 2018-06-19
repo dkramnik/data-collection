@@ -6,8 +6,8 @@ close all
 clear
 clc
 
-load( 'pqc_wirebonded_cryo_1_150K.mat' );
-temp_str = 'T=100K';
+load( 'pqc_wirebonded_cryo_1_300K.mat' );
+temp_str = 'T=300K';
 
 % Figure parameters
 lw = 1.25;
@@ -35,6 +35,8 @@ semilogy( VA_list, CDF_peaks_log_modified / delta_T, 'o--', 'linewidth', lw );
 ylim( [ 1 1e8 ] );
 
 grid on;
+
+xlim( [ 12 13 ] );
 
 xlabel( 'V_A [V]' );
 ylabel( 'Counts in 1s' );
