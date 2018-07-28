@@ -36,9 +36,6 @@ function [ interarrival_times ] = COUNTER_run_single_period( COUNTER, num_sample
     end
     interarrival_times = str2double( results_raw );
     
-    fclose( COUNTER );
-    delete( COUNTER );
-    
     if( verbose )
         fprintf( 'Done!\n' );
     end
