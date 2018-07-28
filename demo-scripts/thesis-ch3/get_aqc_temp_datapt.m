@@ -8,8 +8,14 @@ close all
 clear
 clc
 
+%% Start script
+tic;
+
+% Name of experiment run
+run_name = 'test';
+
 % Create an AQC object to pass to each write function for faster execution
-AQC = AQC_open_serial( [ ] );
+AQC = AQC_open_serial( 2 );
 SMU = SMU_open_gpib( [ ] );
 
 Device = 'D7';
@@ -22,15 +28,17 @@ SMU_channel = 1;
 SMU_voltage = 15;
 SMU_compliance = 100e6;
 SMU_set_voltage( SMU, SMU_channel, SMU_voltage, SMU_compliance )
+fprintf( SMU, ':SENS1:FUNC:OFF:ALL' );
+fprintf( SMU, ':SENS1:FUNC "VOLT:DC"' );
 fprintf( SMU, ':SENS1:VOLT:NPLC 10' );
-V_BR = str2double( fread( SMU ) )
+fprintf( SMU, ':MEAS:VOLT:DC?' );
+V_BR = str2double( fgetl( SMU ) );
+disp( V_BR );
 SMU_set_output_off( SMU );
 fclose( SMU );
 
-%V_BR = input( 'Enter breakdown voltage (100uA current) manually: ' );
-AQC_write_mode( AQC, 'AQC' );
+%% Get temps from Lakeshore controller
 
-%%
 [ temp_inst_id, temps ] = TEMP_get_temps( [], true );   % addr = default, verbose = true
 if isempty( temps )
     temp_inst_id = 'Manual Entry';
@@ -39,13 +47,9 @@ end
 disp( temps );
 
 %% Manually adjust VA and holdoff sweep parameters here
-VA_start = 10.70;
-VA_end = 11.10;
-VA_delta = 0.10;
-num_VA = 1 + ( VA_end - VA_start ) / VA_delta;
-VA_list = linspace( VA_start, VA_end, num_VA );
-%comp_thres_list = linspace( 0.95, 0.925, num_VA );
-%VA_list =         [ 10.85, 10.90, 11.00, 11.05, 11.10, 11.15, 11.20, 11.25, 11.30];
+overbias_percentage_list = 1.01 : 0.01 : 1.10;  % 1% to 10% sweep
+
+VA_list = V_BR * overbias_percentage_list;
 comp_thres_list = 0.90 * ones( size( VA_list ) );
 
 % DAC val. '1572' = 10us holdoff
@@ -93,9 +97,7 @@ AQC_write_mode( AQC, 'IV_TEST' );
 % End serial communication
 fclose( AQC );
 
-% Name of experiment run
-laser = 0;
-run_name = 'LL3';
-
 % Save .mat file with the data collected in the workspace
 save( [ run_name '-AQC-sweep-data_' datestr( now, 'mm-dd-yyyy_HH-MM-SS' ) ] );
+
+toc
