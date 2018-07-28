@@ -30,11 +30,11 @@ function [ interarrival_times ] = COUNTER_run_single_period( COUNTER, num_sample
     
     results_raw = [];
     count = 512;
-    while count == 512
+    while count == 512  % This is a hack, figure out how to read data correctly in the future
         [ new_data, count ] = fgetl( COUNTER );
         results_raw = [ results_raw new_data ];
     end
-    interarrival_times = str2double( results_raw );
+    interarrival_times = str2num( results_raw ); % str2double does NOT work here!
     
     if( verbose )
         fprintf( 'Done!\n' );
