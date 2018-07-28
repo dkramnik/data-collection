@@ -50,8 +50,8 @@ pulse_width_mean = zeros( size( holdoff_list ) );
 pulse_width_std = zeros( size( holdoff_list ) );
 
 for i = 1 : length( holdoff_list )
-    pulse_width_mean = mean( raw_pulse_width_data{ i } );
-    pulse_width_std = std( raw_pulse_width_data{ i } );
+    pulse_width_mean( i ) = mean( raw_pulse_width_data{ i } );
+    pulse_width_std( i ) = std( raw_pulse_width_data{ i } );
 end
 
 plot( holdoff_list, pulse_width_mean, 'o--', 'linewidth', lw );
