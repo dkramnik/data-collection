@@ -6,7 +6,7 @@ clc
 delete( instrfind )
 
 % Create an AQC object to pass to each write function for faster execution
-AQC = AQC_open_serial( [] );
+AQC = AQC_open_serial( 2 );
 
 % Mode 1 = IV TEST
 AQC_write_mode( AQC, 1 )
@@ -44,7 +44,7 @@ VCOMP = num2str( VCOMP, '%04d' );
 
 % Define the any reamining DAC values directly
 DIAMOND_IBIAS = '2000'; % 1mA/1000
-ONE_SHOT = '0200';  % Max ~ 1630
+ONE_SHOT = '0500';  % Max ~ 1630
 SLEW_UP = '4000';
 SLEW_DOWN = '4000';
 SLEW_MAX = '3300';

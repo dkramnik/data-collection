@@ -2,9 +2,9 @@ function [ AQC ] = AQC_open_serial( aqc_index )
 % Opens a USB COM port to talk to the AQC
 % 'index' specifies the serial_list index to use, if specifically known
     
-    if( isempty( aqc_index ) )  % index is not known
-        
-        serial_list = seriallist;
+    serial_list = seriallist;
+
+    if( isempty( aqc_index ) )  % index is not known    
         serial_inds = strfind( serial_list, '/dev/cu.usbmodem' );
         aqc_index = find( not( cellfun( 'isempty', serial_inds ) ) );
         
