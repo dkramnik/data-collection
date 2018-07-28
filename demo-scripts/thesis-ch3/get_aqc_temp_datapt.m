@@ -8,7 +8,7 @@ close all
 clear
 clc
 
-%% Start script
+% Start script
 tic;
 
 % Name of experiment run
@@ -27,12 +27,12 @@ AQC_write_mode( AQC, 'IV_TEST' );
 SMU_channel = 1;
 SMU_voltage = 15;
 SMU_compliance = 100e6;
-SMU_set_voltage( SMU, SMU_channel, SMU_voltage, SMU_compliance )
-fprintf( SMU, ':SENS1:FUNC:OFF:ALL' );
-fprintf( SMU, ':SENS1:FUNC "VOLT:DC"' );
-fprintf( SMU, ':SENS1:VOLT:NPLC 10' );
-fprintf( SMU, ':MEAS:VOLT:DC?' );
-V_BR = str2double( fgetl( SMU ) );
+V_BR = SMU_set_voltage( SMU, SMU_channel, SMU_voltage, SMU_compliance );
+%fprintf( SMU, ':SENS1:FUNC:OFF:ALL' );
+%fprintf( SMU, ':SENS1:FUNC "VOLT:DC"' );
+%fprintf( SMU, ':SENS1:VOLT:NPLC 10' );
+%fprintf( SMU, ':MEAS:VOLT:DC?' );
+%V_BR = str2double( fgetl( SMU ) );
 disp( V_BR );
 SMU_set_output_off( SMU );
 fclose( SMU );
@@ -98,6 +98,7 @@ AQC_write_mode( AQC, 'IV_TEST' );
 fclose( AQC );
 
 % Save .mat file with the data collected in the workspace
-save( [ run_name '-AQC-sweep-data_' datestr( now, 'mm-dd-yyyy_HH-MM-SS' ) ] );
+%save( [ run_name '-AQC-sweep-data_' num2str( temps( 2 ), '%.f' ) 'K_' datestr( now, 'mm-dd-yyyy_HH-MM-SS' ) ] );
+save( [ run_name '-AQC-sweep-data_' num2str( temps( 2 ), '%.f' ) 'K' ] );   % No date string
 
 toc

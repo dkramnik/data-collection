@@ -111,7 +111,7 @@ xlabel( 'Bias Voltage [V]' );
 ylabel( 'DCR [kHz]' );
 set( gca, 'fontsize', 12 );
 
-print( [ dir_name '/' file_name ], '-dpng' );
+%print( [ dir_name '/' file_name ], '-dpng' );
 
 %% TCR/DCR ratio vs. V_A trends
 figure( );
