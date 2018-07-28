@@ -13,13 +13,13 @@ tic;
 
 % Name of experiment run
 run_name = 'test';
+Device = 'D7';
+Diameter = '10e-6';
 
 % Create an AQC object to pass to each write function for faster execution
 AQC = AQC_open_serial( 2 );
 SMU = SMU_open_gpib( [ ] );
-
-Device = 'D7';
-Diameter = '10e-6';
+COUNTER = COUNTER_open_gpib( [ ] );
 
 % Use a sourcemeter to automatically find the breakdown voltage
 AQC_write_mode( AQC, 'IV_TEST' );
@@ -28,11 +28,6 @@ SMU_channel = 1;
 SMU_voltage = 15;
 SMU_compliance = 100e6;
 V_BR = SMU_set_voltage( SMU, SMU_channel, SMU_voltage, SMU_compliance );
-%fprintf( SMU, ':SENS1:FUNC:OFF:ALL' );
-%fprintf( SMU, ':SENS1:FUNC "VOLT:DC"' );
-%fprintf( SMU, ':SENS1:VOLT:NPLC 10' );
-%fprintf( SMU, ':MEAS:VOLT:DC?' );
-%V_BR = str2double( fgetl( SMU ) );
 disp( V_BR );
 SMU_set_output_off( SMU );
 fclose( SMU );
@@ -68,7 +63,8 @@ holdoff_list = round( holdoff_list );
 num_points = 1000;
 num_groups = 1;    % 10 groups of 1000 measurements
 
-raw_data = cell( length( VA_list ), length( holdoff_list ) );
+raw_interarrival_data = cell( length( VA_list ), length( holdoff_list ) );
+raw_totalize_data = cell( length( VA_list ), length( holdoff_list ) );
 
 for i = 1 : length( VA_list )
     % Set the bias voltage and comp. threshold
@@ -86,8 +82,15 @@ for i = 1 : length( VA_list )
         % Take interarrival time measurements
         for k = 1 : num_groups
             disp( [ 'VA_ind (i) = ' num2str( i ) ', holdoff_ind (j) = ' num2str( j ) ', Group (k) = ' num2str( k ) ] );
-            raw_data{ i, j } = [ raw_data{ i, j }, COUNTER_run_single_period( num_points / num_groups, [], [] ) ];
+            raw_interarrival_data{ i, j } = [ raw_interarrival_data{ i, j }, COUNTER_run_single_period( COUNTER, num_points / num_groups, 'true' ) ];
         end
+        
+        % Take basic "total counts in 1s" measurement
+        slope = 'POS';
+        threshold = 1.0;
+        time = 0.1;
+        bins = 10;
+        raw_totalize_data{ i, j } = COUNTER_run_single_totalize( COUNTER, slope, threshold, time, bins );
     end
 end
 
@@ -96,6 +99,8 @@ AQC_write_mode( AQC, 'IV_TEST' );
 
 % End serial communication
 fclose( AQC );
+fclose( SMU );
+fclose( COUNTER );
 
 % Save .mat file with the data collected in the workspace
 %save( [ run_name '-AQC-sweep-data_' num2str( temps( 2 ), '%.f' ) 'K_' datestr( now, 'mm-dd-yyyy_HH-MM-SS' ) ] );

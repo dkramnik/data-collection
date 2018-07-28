@@ -24,7 +24,7 @@ for j = 1 : length( holdoff_list )
     
     for i = 1 : length( VA_list )
         [ TCR( i, j ), DCR( i, j ), p_ap_intercept( i, j ), p_ap_geometric( i, j ) ] = ...
-            SRA_make_plot( raw_data{ i, j }, true, fig_handle );
+            SRA_make_plot( raw_interarrival_data{ i, j }, true, fig_handle );
     end
     
     title( [ 'Holdoff = ' num2str( holdoff_list( j ) ) ] );
@@ -38,7 +38,7 @@ for i = 1 : length( VA_list )
     
     for j = 1 : length( holdoff_list )
         [ TCR( i, j ), DCR( i, j ), p_ap_intercept( i, j ), p_ap_geometric( i, j ) ] = ...
-            SRA_make_plot( raw_data{ i, j }, true, fig_handle );
+            SRA_make_plot( raw_interarrival_data{ i, j }, true, fig_handle );
     end
     
     title( [ 'V_A = ' num2str( VA_list( i ) ) ] );
@@ -52,7 +52,7 @@ hold on;
 grid on;
 sra_legend_strings = {};
 for i = 1 : length( VA_list )
-    sorted_data = sort( raw_data{ i, 1 }, 'descend' );
+    sorted_data = sort( raw_interarrival_data{ i, 1 }, 'descend' );
     len = length( sorted_data );
     
     holdoff_time = sorted_data( end );  % Small error due to 45ns delay line
@@ -78,7 +78,7 @@ ylim( [ 0, 50 ] );
 %% Make legend entry with holdoff times
 legend_strings = cell( size( holdoff_list ) );
 for i = 1 : length( holdoff_list )
-   legend_strings{ i } = [ 't_h = ' num2str( 1e6 * min( raw_data{ 1, i } ), '%.2f' ) 'us, T = ' num2str( TEMP, '%.1f' ) 'K' ];
+   legend_strings{ i } = [ 't_h = ' num2str( 1e6 * min( raw_interarrival_data{ 1, i } ), '%.2f' ) 'us, T = ' num2str( TEMP, '%.1f' ) 'K' ];
 end
 
 %% Make 2D plots with exponential fits over DCR trends
@@ -89,7 +89,7 @@ fit_legend_strings = {};
 for i = 1 : length( holdoff_list )
     dcr_fit = fit( transpose( VA_list ), DCR( :, i ), 'exp1' );
     plot( dcr_fit, VA_list, DCR( :, i ), 'o' );
-    fit_legend_strings{ 2 * i - 1 } = [ 't_h = ' num2str( 1e6 * min( raw_data{ 1, i } ), '%.2f' ) 'us' ];
+    fit_legend_strings{ 2 * i - 1 } = [ 't_h = ' num2str( 1e6 * min( raw_interarrival_data{ 1, i } ), '%.2f' ) 'us' ];
     fit_legend_strings{ 2 * i } = [ 'Fit #' num2str( i ) ];
 end
 legend( fit_legend_strings, 'location', 'NW' );
@@ -146,7 +146,7 @@ hold on;
 grid on;
 
 num_bins = 100;
-hist = histogram( raw_data{ 1, 1 }, 'NumBins', num_bins );
+hist = histogram( raw_interarrival_data{ 1, 1 }, 'NumBins', num_bins );
 
 x_coords = ( hist.BinEdges( 1 : end - 1 ) + hist.BinWidth / 2 )';
 y_coords = hist.Values';
@@ -165,7 +165,7 @@ p_ap_hist = sum( y_coords - poisson_pdf( norm_fit, x_coords ) ) / num_points;
 xlabel( 'Interarrival Time [s]' );
 ylabel( 'Counts [dimensionless]' );
 legend( [ 'Histogram' newline ...
-    '(T = ' num2str( TEMP ) 'K, V_A = ' num2str( VA_list( 1 ) ) 'V, t_h = ' num2str( 1e6 * min( raw_data{ 1, 1 } ), '%.1f' ) 'us)' ], ...
+    '(T = ' num2str( TEMP ) 'K, V_A = ' num2str( VA_list( 1 ) ) 'V, t_h = ' num2str( 1e6 * min( raw_interarrival_data{ 1, 1 } ), '%.1f' ) 'us)' ], ...
     [ 'Poisson DCR Fit' newline ...
     '(DCR = ' num2str( DCR( 1, 1 ), '%.1f' ) 'Hz, p_{ap} = ' num2str( 100 * p_ap_hist, '%.1f' ) '%)' ] );
 set( gca, 'fontsize', 12 );
@@ -178,8 +178,8 @@ num_bins = 100;
 
 for i = 1 : length( VA_list )
     for j = 1 : length( holdoff_list )
-        % Process raw_data{ i, j }
-        hist = histogram( raw_data{ i, j }, 'NumBins', num_bins );
+        % Process raw_interarrival_data{ i, j }
+        hist = histogram( raw_interarrival_data{ i, j }, 'NumBins', num_bins );
         
         x_coords = ( hist.BinEdges( 1 : end - 1 ) + hist.BinWidth / 2 )';
         y_coords = hist.Values';

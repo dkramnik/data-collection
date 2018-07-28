@@ -1,10 +1,5 @@
-function [ interarrival_times ] = COUNTER_run_single_period( num_samples, addr, verbose )
-% Gets 'num_samples' of single period measurements from universal counter on
-% GPIB address 'addr'
-
-    if( isempty( addr ) )   % Default address = 3
-        addr = 3;
-    end
+function [ interarrival_times ] = COUNTER_run_single_period( COUNTER, num_samples, verbose )
+% Gets 'num_samples' of single period measurements from universal counter
     
     if( isempty( verbose ) )   % Default is verbose
         verbose = true;
@@ -14,10 +9,7 @@ function [ interarrival_times ] = COUNTER_run_single_period( num_samples, addr, 
         fprintf( 'Collecting %d interarrivals from the frequency counter...\n', num_samples );
     end
     
-    % Create instrument object and open communication
-    COUNTER = visa( 'ni', [ 'GPIB0::' num2str( addr ) '::INSTR' ] );
     set( COUNTER, 'Timeout', 30 ); % Long timeout for slow measurements
-    fopen( COUNTER );
     
     % Configure instrument for single period measurement
     fprintf( COUNTER, 'CONF:SPER' );
@@ -42,7 +34,7 @@ function [ interarrival_times ] = COUNTER_run_single_period( num_samples, addr, 
         [ new_data, count ] = fgetl( COUNTER );
         results_raw = [ results_raw new_data ];
     end
-    interarrival_times = str2num( results_raw );
+    interarrival_times = str2double( results_raw );
     
     fclose( COUNTER );
     delete( COUNTER );
