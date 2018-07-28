@@ -104,10 +104,8 @@ for k = 1 : length( data_files )
     
     % Find the breakdown voltage (midpt. between first zero and nonzero
     % entry)
-    %VA_no_counts = VA_list( find( CDF_peaks_mean == 0 ) );
-    %V_BR_extrapolated = VA_no_counts( end ) + VA_delta / 2;
-    % BETTER: USE OUR PREVIOUS LINEAR FIT!
-    V_BR_extrapolated = 12.20 - 7.2e-3 * (300 - data_file_temps( k ) );
+    VA_no_counts = VA_list( find( CDF_peaks_mean == 0 ) );
+    V_BR_extrapolated = VA_no_counts( end ) + VA_delta / 2;
     
     % Add some tiny entries instead of zero for plotting on log scale
     CDF_peaks_mean_log_modified = CDF_peaks_mean;
@@ -148,7 +146,7 @@ set( gca, 'fontsize', fs );
 % Create 2D plot of countrate vs. temp. as we sweep overbias percent
 % Note: the weird indexing and legend flip are to get the legend and plots
 % to have the same vertical order, otherwise it looks confusing
-fig_3 = figure( );
+figure( )
 
 for k = 1 : length( overbias_sample_points )
     %errorbar( data_file_temps, ...
@@ -156,7 +154,7 @@ for k = 1 : length( overbias_sample_points )
     %    errorbars_interpolated( :, length( overbias_sample_points ) - k + 1 ), ...
     %    'o--', ...
     %    'linewidth', lw );
-    plot( round( data_file_temps ), ...
+    plot( data_file_temps, ...
         countrates_interpolated( :, length( overbias_sample_points ) - k + 1 ), ...
         'o--', ...
         'linewidth', lw );
@@ -169,15 +167,3 @@ xlabel( 'Temperature [K]' );
 ylabel( 'Counts in 1s' );
 set( gca, 'fontsize', fs );
 legend( sprintfc( '%.1f%% Overbias', 100 * flip( overbias_sample_points ) ), 'location', 'SE' );
-
-xlim( [ 100 300 ] );
-text( 175, 5e7, [ 'D = 10 ' char(181) 'm, R_Q = ' num2str( pqc.RQ / 1000 ) ' k' char( 937 ) ], 'fontsize', fs );
-
-save_figure_as_pdf( fig_3, 'pqc_wirebonded_cryo_2_overbias_trends' );
-
-% Save overbias sweep data using a new struct
-data_struct.data_file_temps = data_file_temps;
-data_struct.countrates_interpolated = countrates_interpolated;
-data_struct.overbias_sample_points = overbias_sample_points;
-data_struct.pqc = pqc;
-save( 'pqc-wirebonded-cryo-2-triple-R-processed-data.mat', '-struct', 'data_struct' );

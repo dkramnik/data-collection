@@ -9,7 +9,7 @@ function [ AQC ] = AQC_open_serial( aqc_index )
         aqc_index = find( not( cellfun( 'isempty', serial_inds ) ) );
         
         if length( aqc_index ) > 1
-            aqc_index = aqc_index( 1 ); % If more than one, pick first and print warning
+            aqc_index = aqc_index( end ); % If more than one, pick first and print warning
             disp( 'Warning: multiple USB serial ports detected, picking first one.' );
         end
     end
