@@ -3,7 +3,7 @@ clear
 clc
 
 %file_name = 'test-AQC-sweep-data_07-28-2018_17-40-48.mat';
-file_name = 'cryo-run1-AQC-sweep-data_294K.mat';
+file_name = 'cryo-run1-AQC-sweep-data_160K.mat';
 
 load( file_name );   
 
