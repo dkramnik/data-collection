@@ -9,7 +9,7 @@ function [ interarrival_times ] = COUNTER_run_single_period( COUNTER, num_sample
         fprintf( 'Collecting %d interarrivals from the frequency counter...\n', num_samples );
     end
     
-    set( COUNTER, 'Timeout', 30 ); % Long timeout for slow measurements
+    set( COUNTER, 'Timeout', 300 ); % Very long timeout for very slow measurements, set dynamically in the future!
     
     % Configure instrument for single period measurement
     fprintf( COUNTER, 'CONF:SPER' );
