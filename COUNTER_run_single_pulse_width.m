@@ -12,7 +12,7 @@ function [ interarrival_times ] = COUNTER_run_single_pulse_width( COUNTER, type,
     set( COUNTER, 'Timeout', 30 ); % Long timeout for slow measurements
     
     % Configure instrument for pulse width measurement
-    if type == 'NEG'
+    if strcmp( type, 'NEG' )
         fprintf( COUNTER, 'CONF:NWID' );
     else
         fprintf( COUNTER, 'CONF:PWID' );

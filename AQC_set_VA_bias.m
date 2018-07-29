@@ -1,4 +1,4 @@
-function [ message ] = AQC_set_VA_bias( AQC, V_A )
+function [ V_A_ACT, message ] = AQC_set_VA_bias( AQC, V_A )
 % Write a value to the AQC's cascode current bias DAC so as to set the SPAD
 % bias voltage to 'V_A'
 % Can pass an 'AQC' serial instrument for faster execution
@@ -14,6 +14,8 @@ function [ message ] = AQC_set_VA_bias( AQC, V_A )
     R_E = 470;
     R_CCS = 330;
     V_BE = 0.6;
+    
+    V_A_ACT = V_A;  % Return the actual value achieved if there was DAC satuation
     
     % Calculate the required DAC values to set the desired parameters
     CASCODE_IBIAS = round( 1000 * ( V_CCS_RAIL - ( R_CCS / R_L ) * ...

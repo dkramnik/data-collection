@@ -12,7 +12,7 @@ clc
 tic;
 
 % Name of experiment run
-run_name = 'test';
+run_name = 'test-1kHzsiggen-1kpts';
 Device = 'D7';
 Diameter = '10e-6';
 
@@ -44,39 +44,41 @@ disp( temps );
 %% Manually adjust VA and holdoff sweep parameters here
 overbias_percentage_list = 1.01 : 0.01 : 1.10;  % 1% to 10% sweep
 
-VA_list = V_BR * overbias_percentage_list;
-comp_thres_list = 0.90 * ones( size( VA_list ) );
+VA_target_list = V_BR * overbias_percentage_list;
+comp_thres_list = 0.95 * ones( size( VA_target_list ) );
 
 % DAC val. '1572' = 10us holdoff
 % ~'1300' is min for reliable triggering, '1640' is max. with R47 = 10kohm
 % Range is 5us to 16us
-holdoff_min = 1400;
-holdoff_max = 1500;
-holdoff_length = 2;
-holdoff_list = holdoff_min + (holdoff_max - holdoff_min ) * ...
-    log( linspace( exp( 0 ), exp( 1 ), holdoff_length) );
-holdoff_list = round( holdoff_list );
+%holdoff_min = 1400;
+%holdoff_max = 1500;
+%holdoff_length = 2;
+%holdoff_list = holdoff_min + (holdoff_max - holdoff_min ) * ...
+%    log( linspace( exp( 0 ), exp( 1 ), holdoff_length) );
+%holdoff_list = round( holdoff_list );
 
-%holdoff_length = 1;
-%holdoff_list = [ 1400 ];
+holdoff_length = 3;
+holdoff_list = [ 299, 956, 1563 ];  % Values for 1us, 3.33us, 10us from characterization scripts
 
-num_points = 1000;
-num_groups = 1;    % 10 groups of 1000 measurements
+num_points = 10000;
+num_groups = 1;    % 1 group of 1000 measurements, to save time
 
-raw_interarrival_data = cell( length( VA_list ), length( holdoff_list ) );
-raw_totalize_data = cell( length( VA_list ), length( holdoff_list ) );
+raw_interarrival_data = cell( length( VA_target_list ), length( holdoff_list ) );
+raw_totalize_data = cell( length( VA_target_list ), length( holdoff_list ) );
 
-for i = 1 : length( VA_list )
+VA_list = zeros( size( VA_target_list ) );  % Keep track of the actual VA achieved given DAC limits
+
+for i = 1 : length( VA_target_list )
     % Set the bias voltage and comp. threshold
     AQC_write_mode( AQC, 'IV_TEST' );
-    AQC_set_VA_bias( AQC, VA_list( i ) );
+    [ VA_list( i ), ~ ] = AQC_set_VA_bias( AQC, VA_target_list( i ) );
     AQC_set_comp_thres( AQC, comp_thres_list( i ) );
     AQC_write_mode( AQC, 'AQC' );
     
     for j = 1 : length( holdoff_list )
         % Set the holdoff time
         AQC_write_mode( AQC, 'IV_TEST' );
-        AQC_write_dac( AQC, 1, 2, num2str( holdoff_list( j ) ) );
+        AQC_write_dac( AQC, 1, 2, num2str( holdoff_list( j ), '%04d' ) );
         AQC_write_mode( AQC, 'AQC' );
 
         % Take interarrival time measurements

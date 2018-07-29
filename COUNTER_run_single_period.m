@@ -21,19 +21,19 @@ function [ interarrival_times ] = COUNTER_run_single_period( COUNTER, num_sample
     fprintf( COUNTER, 'INP1:SLOP POS' );    % Positive slope trigger
     
     % Get some measurements
+    fclose( COUNTER );
+    COUNTER.InputBufferSize = 23 * num_samples;
+    fopen( COUNTER );
+    
     fprintf( COUNTER, [ 'SAMP:COUN ' num2str( num_samples ) ] );
     
     pause( 1 );
     
     % Fetch the results from the counter
     fprintf( COUNTER, 'READ?' );
+    [ results_raw, ~ ] = fgetl( COUNTER );
     
-    results_raw = [];
-    count = 512;
-    while count == 512  % This is a hack, figure out how to read data correctly in the future
-        [ new_data, count ] = fgetl( COUNTER );
-        results_raw = [ results_raw new_data ];
-    end
+    size( results_raw )
     interarrival_times = str2num( results_raw ); % str2double does NOT work here!
     
     if( verbose )
