@@ -2,7 +2,7 @@ close all
 clear
 clc
 
-file_name = 'cryo-run1-AQC-sweep-data_150K.mat';
+file_name = 'cryo-run1-AQC-sweep-data_90K.mat';
 
 load( file_name );   
 
