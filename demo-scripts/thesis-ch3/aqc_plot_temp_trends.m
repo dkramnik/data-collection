@@ -28,7 +28,7 @@ end
 figure( )
 
 for index = 1 : 10
-    plot( trend_temps, trend_total_counts( index, : ) / 1e3, 'o--', 'linewidth', lw );
+    semilogy( trend_temps, trend_total_counts( index, : ) / 1e3, 'o--', 'linewidth', lw );
     hold on;
 end
 
