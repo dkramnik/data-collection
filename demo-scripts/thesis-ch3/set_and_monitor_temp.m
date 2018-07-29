@@ -1,6 +1,6 @@
 delete( instrfind );
 
-setpoint = 125;
+setpoint = 120;
 
 TEMP_set_temp_setpoint( [ ], setpoint, 'true' );
 

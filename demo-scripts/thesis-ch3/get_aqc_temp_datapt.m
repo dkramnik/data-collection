@@ -12,7 +12,7 @@ clc
 tic;
 
 % Name of experiment run
-run_name = 'cryo-run1';
+run_name = 'laser-19mA-cryo-run1';
 Device = 'D7';
 Diameter = '10e-6';
 
