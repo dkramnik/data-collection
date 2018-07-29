@@ -28,7 +28,7 @@ end
 figure( )
 
 for index = 1 : 10
-    plot( trend_temps, 1e3 * trend_total_counts( index, : ), 'o--', 'linewidth', lw );
+    plot( trend_temps, trend_total_counts( index, : ) / 1e3, 'o--', 'linewidth', lw );
     hold on;
 end
 
