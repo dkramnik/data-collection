@@ -1,6 +1,6 @@
 delete( instrfind );
 
-setpoint = 89.9;
+setpoint = 125;
 
 TEMP_set_temp_setpoint( [ ], setpoint, 'true' );
 
@@ -23,7 +23,7 @@ while( 1 )
     temps_rad_shield = [ temps_rad_shield temps_last( 1 ) ];
     
     % Zoom in when the regulation gets close
-    if( temps_cold_head( end ) - setpoint < zoom_threshold )
+    if( abs( temps_cold_head( end ) - setpoint ) < zoom_threshold )
         plot( times( temps_cold_head - setpoint < zoom_threshold ), ...
             temps_cold_head( temps_cold_head - setpoint < zoom_threshold ), 'o--' );
         hold on;
