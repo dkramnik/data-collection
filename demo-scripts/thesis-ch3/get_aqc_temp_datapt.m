@@ -12,7 +12,7 @@ clc
 tic;
 
 % Name of experiment run
-run_name = 'test-1kHzsiggen-1kpts';
+run_name = 'cryo-run1';
 Device = 'D7';
 Diameter = '10e-6';
 
@@ -43,6 +43,7 @@ disp( temps );
 
 %% Manually adjust VA and holdoff sweep parameters here
 overbias_percentage_list = 1.01 : 0.01 : 1.10;  % 1% to 10% sweep
+%overbias_percentage_list = [ 1.01 ];
 
 VA_target_list = V_BR * overbias_percentage_list;
 comp_thres_list = 0.95 * ones( size( VA_target_list ) );
@@ -59,6 +60,9 @@ comp_thres_list = 0.95 * ones( size( VA_target_list ) );
 
 holdoff_length = 3;
 holdoff_list = [ 299, 956, 1563 ];  % Values for 1us, 3.33us, 10us from characterization scripts
+
+%holdoff_length = 1;
+%holdoff_list = [ 1500 ];  % testing
 
 num_points = 10000;
 num_groups = 1;    % 1 group of 1000 measurements, to save time
