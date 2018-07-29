@@ -69,7 +69,7 @@ holdoff_list = [ 299, 956, 1563 ];  % Values for 1us, 3.33us, 10us from characte
 %holdoff_length = 1;
 %holdoff_list = [ 1500 ];  % testing
 
-num_points = 1000;
+num_points = 10000;
 num_groups = 10;    % 1 group of 1000 measurements, to save time
 
 raw_interarrival_data = cell( length( VA_target_list ), length( holdoff_list ) );
