@@ -44,11 +44,14 @@ disp( temps );
 %% Manually adjust VA and holdoff sweep parameters here
 overbias_percentage_list = 1.01 : 0.01 : 1.10;  % 1% to 10% sweep
 %overbias_percentage_list = [ 1.01 ];
-% Needed at 180K
+% Needed at 180K, 170K, 160K
 overbias_percentage_list( 1 ) = 1.015;
 
 VA_target_list = V_BR * overbias_percentage_list;
 comp_thres_list = 0.95 * ones( size( VA_target_list ) );
+
+% Needed at 160K, 
+comp_thres_list( 1 ) = 0.975;
 
 % DAC val. '1572' = 10us holdoff
 % ~'1300' is min for reliable triggering, '1640' is max. with R47 = 10kohm

@@ -26,7 +26,7 @@ VREF_DAC2 = 3.3;
 % 9.63 is the min. (need to verify)
 % 12.35V, 0.90V works well at room temp.
 % Define the desired parameters in the circuit
-V_A = 11.0*1.015;
+V_A = 10.83*1.02;
 VREF_COMP = 0.95;
 
 % Calculate the required DAC values to set the desired parameters
