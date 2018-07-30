@@ -20,7 +20,7 @@ for index = 1 : length( data_files )
     trend_temps( index ) = temps( 2 );
     
     totalize_means = 10 * cellfun( @mean, raw_totalize_data );  % Counts in 1s, each bin was 0.1s
-    totalize_means_max_holdoff = totalize_means( :, 3 );
+    totalize_means_max_holdoff = totalize_means( :, 1 );
     
     trend_total_counts( :, index ) = totalize_means_max_holdoff;
 end
@@ -38,3 +38,10 @@ ylabel( 'kCounts in 1s' );
 grid on;
 
 set( gca, 'fontsize', fs );
+
+%%
+
+load( 'cryo-run1-AQC-sweep-data_150K.mat' );
+
+size( raw_interarrival_data{ 1, 1 } )
+hist( raw_interarrival_data{ 1, 1 } )
