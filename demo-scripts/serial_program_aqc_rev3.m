@@ -25,7 +25,7 @@ VREF_DAC2 = 3.3;
 % 9.63 is the min. (need to verify)
 % 12.35V, 0.90V works well at room temp.
 % Define the desired parameters in the circuit
-V_A = 12.35;
+V_A = 11.0;
 VREF_COMP = 0.425;
 
 % Calculate the required DAC values to set the desired parameters
@@ -46,7 +46,7 @@ VCOMP = num2str( VCOMP, '%04d' );
 
 % Define the any reamining DAC values directly
 DELTAV_SETPOINT = '3000';
-DIAMOND_IBIAS = '1200'; % 1mA/1000
+DIAMOND_IBIAS = '2000'; % 1mA/1000
 ONE_SHOT_COMP = '3000';
 ONE_SHOT_CCS = '2000';
 EXTRA_1 = '4000';

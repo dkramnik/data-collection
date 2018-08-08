@@ -6,7 +6,7 @@ clc
 delete( instrfind )
 
 % Create an AQC object to pass to each write function for faster execution
-AQC = AQC_open_serial( 2 );
+AQC = AQC_open_serial( [ ] );
 
 % Mode 1 = IV TEST
 AQC_write_mode( AQC, 1 )
