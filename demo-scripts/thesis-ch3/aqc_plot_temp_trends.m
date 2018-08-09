@@ -27,33 +27,40 @@ end
 
 %% Basic plot of total counts for one holdoff time
 
-figure( )
+holdoff_list_manual = [ 1, 3.3, 10 ];  % [us]
 
-holdoff_index = 3;
+for holdoff_index = 1 : 3
+    
+    fig1 = figure( );
 
-for overbias_index = 1 : 10
-    % temp, overbias, holdoff
-    semilogy( trend_temps, ...
-        trend_total_counts( :, 1 + length( overbias_percentage_list ) - overbias_index, holdoff_index ), ...
-        'o--', 'linewidth', lw );
-    hold on;
+    for overbias_index = 1 : 10
+        % temp, overbias, holdoff
+        semilogy( trend_temps, ...
+            trend_total_counts( :, 1 + length( overbias_percentage_list ) - overbias_index, holdoff_index ), ...
+            'o--', 'linewidth', lw );
+        hold on;
+    end
+
+    legend( sprintfc( '%.f%% Overbias', 100 * flip( overbias_percentage_list - 1 ) ), 'location', 'SE' );
+
+    xlabel( 'Temperature [K]' );
+    ylabel( 'Counts in 1s' );
+
+    text( 251, 1.4e4, [ 't_{holdoff} = ' num2str( holdoff_list_manual( holdoff_index ) ) '\mus' ], 'fontsize', fs );
+
+    grid on;
+
+    set( gca, 'fontsize', fs );
+
+    xlim( [ 90, 300 ] );
+    ylim( [ 1e1, 1e6 ] );
+    
+    save_figure_as_pdf( fig1, [ 'aqc_total_dark_counts_' num2str( holdoff_list_manual( holdoff_index ), '%.f' ) 'us' ] );
 end
 
-legend( sprintfc( '%.f%% Overbias', 100 * flip( overbias_percentage_list - 1 ) ), 'location', 'SE' );
+%% Basic plot of total counts for 1%, 3%, 5% overbias at all three holdoff times
 
-xlabel( 'Temperature [K]' );
-ylabel( 'Counts in 1s' );
-
-grid on;
-
-set( gca, 'fontsize', fs );
-
-xlim( [ 90, 300 ] );
-ylim( [ 1e1, 1e6 ] );
-
-%% Basic plot of total counts for one overbias
-
-figure( )
+fig2 = figure( );
 
 for index = 1 : 3
     % temp, overbias, holdoff
@@ -77,6 +84,14 @@ end
 
 legend( '1\mus Holdoff Time', '3.3\mus Holdoff Time', '10\mus Holdoff Time', 'location', 'SE' );
 
+text( 150, 1.05e2, '1%', 'fontsize', fs );
+text( 150, 1.6e3, '3%', 'fontsize', fs );
+text( 150, 6.0e4, '5%', 'fontsize', fs );
+
+rectangle( 'Position', [145 1.4e2 10 2.5e2] ); % x,y,w,h
+rectangle( 'Position', [145 2.2e3 10 3.0e3] ); % x,y,w,h
+rectangle( 'Position', [145 1.4e4 10 2.5e4] ); % x,y,w,h
+
 xlabel( 'Temperature [K]' );
 ylabel( 'Counts in 1s' );
 
@@ -86,3 +101,5 @@ set( gca, 'fontsize', fs );
 
 xlim( [ 90, 300 ] );
 ylim( [ 1e1, 1e6 ] );
+
+save_figure_as_pdf( fig2, 'aqc_total_dark_count_holdoff_comparison' );
