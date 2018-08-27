@@ -5,6 +5,23 @@ clc
 
 delete( instrfind )
 
+input( 'Unplug leaf heater controller, then press [enter].' );
+
+before = seriallist;
+
+input( 'Replug leaf heater controller, then press [enter] to start.' );
+
+after = seriallist;
+while( isempty( setdiff( after, before ) ) )    % Wait for new device
+    after = seriallist;
+    pause( 0.1 );
+end
+port_name = setdiff( after, before );
+
+if length( port_name ) > 1
+    port_name = port_name( 1 ); % OSX systems: 'cu' comes before 'tty'
+end
+
 % Create an AQC object to pass to each write function for faster execution
 AQC = AQC_open_serial( [ ] );
 
