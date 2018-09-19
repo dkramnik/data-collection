@@ -43,6 +43,8 @@ AQC_write_mode( AQC, 'IV_TEST' );
 save( 'holdoff_time_characterization_data.mat' );
 
 %% Process and plot results
+load( 'holdoff_time_characterization_data.mat' );
+
 fig1 = figure( );
 
 fs = 14;
@@ -76,7 +78,7 @@ grid on;
 save_figure_as_pdf( fig1, 'holdoff_time_characterization' );
 
 % Now print the required holdoff settings for some desired holdoff times
-holdoff_times_desired = [ 1e-6, 3.33e-6, 10e-6 ];
+holdoff_times_desired = [ 1e-6, 3.33e-6, 5e-6, 10e-6 ];
 
 for i = holdoff_times_desired
     disp( [ 'Desired holdoff time = ' num2str( i, '%.2e' ) ] );

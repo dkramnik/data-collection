@@ -2,7 +2,7 @@ close all
 clear
 clc
 
-file_name = 'cryo-run1-AQC-sweep-data_90K.mat';
+file_name = 'cryo-run1-AQC-sweep-data_140K.mat';
 
 load( file_name );   
 
@@ -24,7 +24,7 @@ for j = 1 : length( holdoff_list )
     
     for i = 1 : length( VA_list )
         [ TCR( i, j ), DCR( i, j ), p_ap_intercept( i, j ), p_ap_geometric( i, j ) ] = ...
-            SRA_make_plot( raw_interarrival_data{ i, j }, true, fig_handle );
+            SRA_make_plot( raw_interarrival_data{ i, j }, true, fig_handle, [] );
     end
     
     title( [ 'Holdoff = ' num2str( holdoff_list( j ) ) ] );
@@ -38,7 +38,7 @@ for i = 1 : length( VA_list )
     
     for j = 1 : length( holdoff_list )
         [ TCR( i, j ), DCR( i, j ), p_ap_intercept( i, j ), p_ap_geometric( i, j ) ] = ...
-            SRA_make_plot( raw_interarrival_data{ i, j }, true, fig_handle );
+            SRA_make_plot( raw_interarrival_data{ i, j }, true, fig_handle, [] );
     end
     
     title( [ 'V_A = ' num2str( VA_list( i ) ) ] );

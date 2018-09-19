@@ -1,7 +1,11 @@
-function [ TCR, DCR, p_ap_intercept, p_ap_geometric ] = SRA_make_plot( raw_data, draw_figure, fig_handle )
-% Apply sequence of ranged amplitudes method to analyzer SPAD interarrival
+function [ TCR, DCR, p_ap_intercept, p_ap_geometric ] = SRA_make_plot( raw_data, draw_figure, fig_handle, x_fit_lim )
 % time data to extract total count rate (TCR), dark count rate (DCR), and
 % afterpulsing probability.
+    
+    % Default fit limits:
+    if isempty( x_fit_lim )
+        x_fit_lim = [ 1.0 4.0 ];
+    end
     
     len = length( raw_data );
     sorted_data = sort( raw_data, 'descend' );
@@ -12,7 +16,12 @@ function [ TCR, DCR, p_ap_intercept, p_ap_geometric ] = SRA_make_plot( raw_data,
     x = log( len ./ n );
     y = transpose( sorted_data );
     
-    mdl = fitlm( x( x > 1.0 & x < 4.0 ), y( x > 1.0 & x < 4.0 ) );
+    mdl = fitlm( ...
+        x( x > x_fit_lim( 1 ) & x < x_fit_lim( 2 ) ), ...
+        y( x > x_fit_lim( 1 ) & x < x_fit_lim( 2 ) ) );
+    mdl = fitlm( ...
+        x( y > 0.01 * max( y ) ), ...
+        y( y > 0.01 * max( y ) ) );
     slope = mdl.Coefficients{ 'x1', 'Estimate' };
     y_intercept = mdl.Coefficients{ '(Intercept)', 'Estimate' };
     x_intercept = ( abs( y_intercept ) + holdoff_time ) / slope;
@@ -22,7 +31,7 @@ function [ TCR, DCR, p_ap_intercept, p_ap_geometric ] = SRA_make_plot( raw_data,
     
     % Using intercept method
     p_ap_intercept = x_intercept;
-    % Using geometric series estimate
+    % Using geometric series estimate, without dead time correction
     p_ap_geometric = ( TCR / DCR - 1 ) / ( TCR / DCR );
     
     disp( [ 'TCR = ' num2str( TCR ) ', DCR = ' num2str( DCR ) ...
