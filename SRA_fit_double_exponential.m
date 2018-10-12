@@ -5,7 +5,8 @@ function [ param_fit, fit_func_dual_exp_cdf ] = SRA_fit_double_exponential( raw_
 
     % Sort data
     sorted_data = sort( raw_interarrival_times, 'descend' );
-    sorted_data = transpose( sorted_data ); % Why?
+    %sorted_data = transpose( sorted_data ); % Why?
+    sorted_data = reshape( sorted_data, 1, length( sorted_data ) );
     
     % Make CDF vector
     len = length( sorted_data );   
@@ -23,7 +24,7 @@ function [ param_fit, fit_func_dual_exp_cdf ] = SRA_fit_double_exponential( raw_
         - params( 1 ) .* exp( -1 .* params( 2 ) .* ( x_data - holdoff_time ) );
     
     % Make a rough initial parameter guess
-    P_AP_guess = 0.01;
+    P_AP_guess = 0.1;
     lambda_PDC_guess = 1 / mean( sorted_data );
     lambda_AP_guess = 100 * lambda_PDC_guess;   % Large initial separation tends to make fit run faster
     param_guess = [ P_AP_guess, lambda_AP_guess, lambda_PDC_guess ];
