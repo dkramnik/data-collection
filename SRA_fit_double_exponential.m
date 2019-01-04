@@ -1,4 +1,4 @@
-function [ param_fit, fit_func_dual_exp_cdf ] = SRA_fit_double_exponential( raw_interarrival_times )
+function [ param_fit, fit_func_dual_exp_cdf ] = SRA_fit_double_exponential( raw_interarrival_times, param_guess, make_plot, plot_title )
 % SRA_fit_double_exponential
 %   Fit a double-exponential model to a sequence of ranged amplitudues
 %   (SRA) made from an input vector of SPAD interarrival time data
@@ -23,14 +23,26 @@ function [ param_fit, fit_func_dual_exp_cdf ] = SRA_fit_double_exponential( raw_
         - ( 1 - params( 1 ) ) .* exp( -1 .* params( 3 ) .* ( x_data - holdoff_time ) ) ...
         - params( 1 ) .* exp( -1 .* params( 2 ) .* ( x_data - holdoff_time ) );
     
-    % Make a rough initial parameter guess
-    P_AP_guess = 0.1;
-    lambda_PDC_guess = 1 / mean( sorted_data );
-    lambda_AP_guess = 100 * lambda_PDC_guess;   % Large initial separation tends to make fit run faster
-    param_guess = [ P_AP_guess, lambda_AP_guess, lambda_PDC_guess ];
-        
+    if( isempty( param_guess ) )
+        % Make a default initial parameter guess
+        P_AP_guess = 0.5;
+        lambda_PDC_guess = 1 / mean( sorted_data );
+        lambda_AP_guess = 10 * lambda_PDC_guess;   % Large initial separation tends to make fit run faster
+        param_guess = [ P_AP_guess, lambda_AP_guess, lambda_PDC_guess ];    
+    end
+    
+    % Add bounds to the parameters
+    lb = [ 0, 0, 0 ];   % All parameters are positive
+    ub = [ 1, 1e9, 1e9 ];   % Limit P_AP, don't limits lambdas
+    
+    % Modify the stopping conditions
+    options = optimoptions( 'lsqcurvefit' );
+    options.FunctionTolerance = 1e-8;   % default is 1e-6
+    options.OptimalityTolerance	= 1e-8; % default is 1e-6
+    
     % Perform gradient descent least squares fit
-    [ param_fit, ~, ~, ~, ~ ] = lsqcurvefit( fit_func_dual_exp_cdf, param_guess, sorted_data, cdf_vec );
+    [ param_fit, ~, ~, ~, ~ ] = lsqcurvefit( ...
+        fit_func_dual_exp_cdf, param_guess, sorted_data, cdf_vec, lb, ub, options );
     
     % Reformat results to plot them on a standard SRA axis (put in
     % different function?)
@@ -38,4 +50,11 @@ function [ param_fit, fit_func_dual_exp_cdf ] = SRA_fit_double_exponential( raw_
     x_plot_fit_realistic = - log( 1 - fit_func_dual_exp_cdf( param_fit, sorted_data ) );
     y_plot_realistic = sorted_data / mean( sorted_data );
     
+    if( make_plot )
+        figure( )
+        plot( x_plot_data_realistic, y_plot_realistic, 'o' );
+        hold on;
+        plot( x_plot_fit_realistic, y_plot_realistic );
+        title( plot_title );
+    end
 end

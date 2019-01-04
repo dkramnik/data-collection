@@ -1,4 +1,4 @@
-function [ TCR, DCR, p_ap_intercept, p_ap_geometric ] = SRA_make_plot( raw_data, draw_figure, fig_handle, x_fit_lim )
+function [ TCR, DCR, p_ap_fast ] = SRA_make_plot( raw_data, draw_figure, fig_handle, x_fit_lim )
 % time data to extract total count rate (TCR), dark count rate (DCR), and
 % afterpulsing probability.
     
@@ -29,14 +29,11 @@ function [ TCR, DCR, p_ap_intercept, p_ap_geometric ] = SRA_make_plot( raw_data,
     TCR = 1 / mean( sorted_data );
     DCR = 1 / slope;
     
-    % Using intercept method
-    p_ap_intercept = x_intercept;
-    % Using geometric series estimate, without dead time correction
-    p_ap_geometric = ( TCR / DCR - 1 ) / ( TCR / DCR );
+    % Approximation assuming fast afterpulse decay time
+    p_ap_fast = 1 + DCR * ( holdoff_time - mean( sorted_data ) );
     
     disp( [ 'TCR = ' num2str( TCR ) ', DCR = ' num2str( DCR ) ...
-        ', p_ap_intercept = ' num2str( p_ap_intercept ) ...
-        ', p_ap_geometric = ' num2str( p_ap_geometric ) ] );
+        ', p_ap_fast = ' num2str( p_ap_fast ) ] );
     
     if draw_figure
         
